@@ -24,7 +24,7 @@ const generateAccessAndRefreshTokens = async (userId) => {
 };
 
 const registerUser = asyncHandler(async (req, res) => {
-  const { fullName, email, username, password, post, AccessPermission, warehouseId } = req.body;
+  const { fullName, email, username, password } = req.body;
   //console.log("email: ", email);
   if (
     [fullName, email, username, password].some((field) => field?.trim() === "")
@@ -44,9 +44,6 @@ const registerUser = asyncHandler(async (req, res) => {
     email,
     password,
     username: username.toLowerCase(),
-    post,
-    AccessPermission,
-    warehouseId
   });
   const createdUser = await User.findById(user._id).select(
     "-password -refreshToken"
@@ -81,9 +78,10 @@ const loginUser = asyncHandler(async (req, res) => {
   );
  
 
-  const loggedInUser = await User.findById(user._id).select(
-    "-password -refreshToken"
-  );
+  const loggedInUser = await User.findById(user._id)
+  // .select(
+  //   "-password -refreshToken"
+  // );
   const options = {
     httpOnly: true,
     secure: true,

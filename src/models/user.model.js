@@ -31,22 +31,7 @@ const userSchema = new Schema({
   refreshToken: {
     type: String,
   },
-  post: {
-    type: String,
-    
-  },
-  AccessPermission: {
-    type: Object,
-  },
-  warehouseId:{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Warehouses"
-  },
-  isActive: {
-    type: Boolean,
-    default: true,
-  }
-
+  
 });
 
 userSchema.pre("save", async function (next) {
