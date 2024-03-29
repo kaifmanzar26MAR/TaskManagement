@@ -42,14 +42,38 @@ const createTask = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, taskInstance, "Task Created Successfully!!"));
 });
 
-const getAssignTask = asyncHandler(async (req, res)=>{
-  const AssignTask= await Task.find({task_status:"Assign"});
+const getAssignTask = asyncHandler(async (req, res) => {
+  const AssignTask = await Task.find({ task_status: "Assign" });
 
-  if(!AssignTask){
+  if (!AssignTask) {
     throw new ApiError(500, "Error in Finding Assign Tasks!!!");
   }
 
-  return res.status(201).json( new ApiResponse(200, AssignTask, "Got Assign Task Successfully"));
-})
+  return res
+    .status(201)
+    .json(new ApiResponse(200, AssignTask, "Got Assign Task Successfully"));
+});
 
-export { createTask, getAssignTask };
+const updateTask = asyncHandler(async (req, res) => {
+  const {assign_to, task_id, task_priroty, task_status}=req.body;
+  const user=req.user;
+
+  if([assign_to, task_id, task_priroty, task_status].some(field=>field.trim()==='')){
+    throw new ApiError(500, "Couldn't get data properly!!");
+  }
+
+  const task= await Task.findOne({_id:task_id});
+
+  if(!task){
+    throw new ApiError(500, "Couldn't get Task!!");
+  }
+
+  task.task_priroty=task_priroty;
+  task.task_status= task_status;
+
+  await task.save();
+
+  return res.status(201).json(new ApiResponse(200, task, "Task Updated Successfully"))
+});
+
+export { createTask, getAssignTask, updateTask };
