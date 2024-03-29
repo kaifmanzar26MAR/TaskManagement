@@ -9,8 +9,6 @@ const createTask = asyncHandler(async (req, res) => {
     req.body;
   const user = req.user;
 
-console.log(user);
-console.log(assign_to, task_title, task_description, task_team, task_priroty)
   if (
     [assign_to, task_title, task_description, task_team, task_priroty].some(
       (field) => field.trim() === ""
@@ -44,4 +42,14 @@ console.log(assign_to, task_title, task_description, task_team, task_priroty)
     .json(new ApiResponse(200, taskInstance, "Task Created Successfully!!"));
 });
 
-export { createTask };
+const getAssignTask = asyncHandler(async (req, res)=>{
+  const AssignTask= await Task.find({task_status:"Assign"});
+
+  if(!AssignTask){
+    throw new ApiError(500, "Error in Finding Assign Tasks!!!");
+  }
+
+  return res.status(201).json( new ApiResponse(200, AssignTask, "Got Assign Task Successfully"));
+})
+
+export { createTask, getAssignTask };

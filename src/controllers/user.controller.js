@@ -193,8 +193,8 @@ const changeCurrentPassword = asyncHandler(async (req, res) => {
 const getCurrentUser = asyncHandler(async(req, res) => {
   return res.status(200).json(new ApiResponse(200, req.user, "current user fetched successfully"))
 })
-const getAllUsers = asyncHandler(async(req, res) => {
-  const allUsers = await User.find();
+const getAllOtherUsers = asyncHandler(async(req, res) => {
+  const allUsers = await User.find({ _id: { $ne: req.user._id } });
   if (!allUsers) {
     throw new ApiError(
       500,
@@ -233,4 +233,4 @@ const getUserById = asyncHandler(async (req, res) => {
 });
 
 
-export { registerUser, loginUser, logoutUser, refreshAccessToken, changeCurrentPassword, getCurrentUser, getAllUsers, getUserById };
+export { registerUser, loginUser, logoutUser, refreshAccessToken, changeCurrentPassword, getCurrentUser, getAllOtherUsers, getUserById };

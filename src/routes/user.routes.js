@@ -6,7 +6,7 @@ import {
   registerUser,
   refreshAccessToken,
   getCurrentUser,
-  getAllUsers,
+  getAllOtherUsers,
   getUserById,
 } from "../controllers/user.controller.js";
 import { verifyJWT } from "../middlewares/auth.middleware.js";
@@ -17,7 +17,7 @@ router.route("/register").post(registerUser);
 
 router.route("/login").post(loginUser);
 router.route("/getoneuser").post(getUserById);
-router.route("/getallusers").get(getAllUsers);
+router.route("/getallotherusers").get(verifyJWT,getAllOtherUsers);
 //secured routes
 
 router.route("/logout").post(verifyJWT, logoutUser);
