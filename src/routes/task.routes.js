@@ -4,7 +4,7 @@ import { verifyJWT } from "../middlewares/auth.middleware.js";
 
 const router = Router();
 router.route("/createtask").post(verifyJWT,createTask);
-router.route("/getassigntask").get(verifyJWT,getAssignTask);
+router.route("/getassigntask").post(verifyJWT,getAssignTask);
 router.route("/updatetask").post(verifyJWT, updateTask)
 
 export default router;

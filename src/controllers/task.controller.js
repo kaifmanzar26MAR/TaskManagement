@@ -43,7 +43,8 @@ const createTask = asyncHandler(async (req, res) => {
 });
 
 const getAssignTask = asyncHandler(async (req, res) => {
-  const AssignTask = await Task.find({ task_status: "Assign" });
+  const {task_status} = req.body;
+  const AssignTask = await Task.find({ task_status });
 
   if (!AssignTask) {
     throw new ApiError(500, "Error in Finding Assign Tasks!!!");
@@ -53,6 +54,8 @@ const getAssignTask = asyncHandler(async (req, res) => {
     .status(201)
     .json(new ApiResponse(200, AssignTask, "Got Assign Task Successfully"));
 });
+
+
 
 const updateTask = asyncHandler(async (req, res) => {
   const {assign_to, task_id, task_priroty, task_status}=req.body;
