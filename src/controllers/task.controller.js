@@ -5,28 +5,23 @@ import { User } from "../models/user.model.js";
 import { Task } from "../models/task.model.js";
 
 const createTask = asyncHandler(async (req, res) => {
-  const { assign_to, task_title, task_description, task_team, task_priroty } =
+  const { task_title, task_description, task_team, task_priroty } =
     req.body;
   const user = req.user;
 
   if (
-    [assign_to, task_title, task_description, task_team, task_priroty].some(
+    [ task_title, task_description, task_team, task_priroty].some(
       (field) => field.trim() === ""
     )
   ) {
     throw new ApiError(500, "All Fields are required");
   }
 
-  const assign_to_user = await User.findOne({ _id: assign_to });
-
-  if (!assign_to_user) {
-    throw new ApiError(500, "Assigned user not Found!!");
-  }
+  
 
   const taskInstance = await Task.create({
     assign_by: user._id,
-    assign_to,
-    assign_to_name: assign_to_user.fullName,
+    assign_by_name: user.fullName,
     task_title,
     task_team,
     task_description,
@@ -58,11 +53,15 @@ const getAssignTask = asyncHandler(async (req, res) => {
 
 
 const updateTask = asyncHandler(async (req, res) => {
-  const {assign_to, task_id, task_priroty, task_status}=req.body;
+  const {assign_by, task_id, task_priroty, task_status}=req.body;
   const user=req.user;
 
-  if([assign_to, task_id, task_priroty, task_status].some(field=>field.trim()==='')){
+  if([assign_by, task_id, task_priroty, task_status].some(field=>field.trim()==='')){
     throw new ApiError(500, "Couldn't get data properly!!");
+  }
+
+  if(assign_by != user._id){
+    throw new ApiError(500, "You are not allow tho edit this task!!");
   }
 
   const task= await Task.findOne({_id:task_id});
@@ -79,4 +78,29 @@ const updateTask = asyncHandler(async (req, res) => {
   return res.status(201).json(new ApiResponse(200, task, "Task Updated Successfully"))
 });
 
-export { createTask, getAssignTask, updateTask };
+
+const deleteTask= asyncHandler(async(req,res)=>{
+  const {task_id,assign_by} = req.body;
+  const user = req.user;
+
+  if([task_id].some(field=>field.trim()==='')) throw new ApiError(500, "Not Getting Task Id");
+
+  const task= await Task.findOne({_id:task_id});
+
+  if(!task) throw new ApiError(500, "Couldn't find task!!")
+
+  if(assign_by != user._id){
+    throw new ApiError(500, "You are not allow to Delete this Task!!")
+  }
+
+  const deleteResponse= await Task.deleteOne({_id:task_id});
+
+  if(!deleteResponse){
+    throw new ApiError(500, "Something Went worng in deleteing task!!!")
+  }
+
+  return res.status(201).json(new ApiResponse(200, deleteResponse, "Task deleted successfully!!"));
+
+})
+
+export { createTask, getAssignTask, updateTask, deleteTask };

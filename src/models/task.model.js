@@ -7,12 +7,12 @@ const taskSchema = new Schema(
       ref: "User",
       required: true,
     },
-    assign_to: {
-      type: Schema.Types.ObjectId,
-      ref: "User",
-      required: true,
-    },
-    assign_to_name:{
+    // assign_to: {
+    //   type: Schema.Types.ObjectId,
+    //   ref: "User",
+    //   required: true,
+    // },
+    assign_by_name:{
       type:String,
       required:true,
     },
