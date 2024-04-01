@@ -4,13 +4,10 @@
   "description": "",
   "main": "index.js",
   "type": "module",
-  "engines": {
-    "node": "20.x"
-  },
-
+  "proxy": "http://locahost/5000",
   "scripts": {
     "start": "node index.js",
-    "dev": "nodemon -r dotenv/config --experimental-json-modules src/index.js"
+    "dev": "nodemon -r dotenv/config --experimental-json-modules index.js"
   },
   "author": "",
   "license": "ISC",
