@@ -4,7 +4,10 @@
   "description": "",
   "main": "index.js",
   "type": "module",
-  "proxy": "http://locahost/5000",
+  "engines": {
+    "node": "14.x"
+  },
+
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon -r dotenv/config --experimental-json-modules src/index.js"
